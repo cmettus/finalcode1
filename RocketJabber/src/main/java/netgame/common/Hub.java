@@ -7,6 +7,8 @@ import java.util.TreeMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import exceptions.RateException;
+
 
 /**
  * A Hub is a server for a "netgame".  When a Hub is created, it will
@@ -128,8 +130,9 @@ public class Hub {
      * behavior will often be overridden in subclasses.
      * @param playerID  The ID number of the player who sent the message.
      * @param message The message that was received from the player.
+     * @throws RateException 
      */
-    protected void messageReceived(int playerID, Object message) {
+    protected void messageReceived(int playerID, Object message) throws RateException {
         sendToAll(new ForwardedMessage(playerID,message));
     }
     
@@ -318,7 +321,7 @@ public class Hub {
     //------------------------- private implementation part ---------------------------------------
     
     
-    synchronized private void messageReceived(ConnectionToClient fromConnection, Object message) {
+    synchronized private void messageReceived(ConnectionToClient fromConnection, Object message) throws RateException {
               // Note: DisconnectMessage is handled in the ConnectionToClient class.
         int sender = fromConnection.getPlayer();
         messageReceived(sender,message);
